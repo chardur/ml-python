@@ -34,6 +34,8 @@ def explore_data(df, resp_var):
 
     # visualize the data to get an initial feel for it
     df.hist(bins=50, figsize=(12, 8))
+    plt.suptitle('Visualize the data')
+    plt.savefig('./images/visual-data.png')
     plt.show()
 
     # Look for Correlations, R1 is response, other variables are predictors
@@ -44,10 +46,14 @@ def explore_data(df, resp_var):
     # visualize the correlation after selecting a few attributes (top 4_
     attributes = corr_matrix[resp_var].sort_values(ascending=False).iloc[0:4].index
     scatter_matrix(df[attributes], figsize=(12, 8))
+    plt.suptitle('Correlation of top 4 features')
+    plt.savefig('./images/correlation.png')
     plt.show()
 
     # oldpeak has a somewhat spread out distribution, lets see what it looks like vs output
     df.plot(kind="scatter", x="oldpeak", y="output", grid=True, alpha=0.2)
+    plt.title('Oldpeak vs Output')
+    plt.savefig('./images/one-vs-output.png')
     plt.show()
 
 
@@ -111,7 +117,7 @@ def plot_svc(svm_clf, xmin, xmax, df_data, df_predict, df_actual):
         ax.label_outer()
 
 
-# citation Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow (3rd edition)
+
 def plot_svc_vertical(svm_clf, xmin, xmax, df_data, df_predict, df_actual):
     x0 = np.linspace(xmin, xmax, 200)
     b = svm_clf.intercept_[0]
@@ -276,4 +282,5 @@ if __name__ == '__main__':
     # plt.show()
 
     plot_svc_vertical(no_scale_svm, 0, 250, heart_data_test, predict, heart_labels_test)
+    plt.savefig('./images/vertical-accuracy.png')
     plt.show()
