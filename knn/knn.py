@@ -122,7 +122,7 @@ if __name__ == '__main__':
     # print(test_set.head())
 
     # another way to create train / test set using sklearn
-    train_set, test_set = train_test_split(df, test_size=0.2, random_state=13, stratify=y)
+    train_set, test_set = train_test_split(df, test_size=0.2, random_state=13)
     #print(test_set.head())
 
     # create a copy of the training & test set for future use with transformations
@@ -208,3 +208,4 @@ if __name__ == '__main__':
 
     # plt.scatter(glass_data_train.iloc[:, 0], glass_data_train.iloc[:, 1], c=glass_labels_train, s=10, facecolors='#AAA', zorder=-1)
     # plt.show()
+
