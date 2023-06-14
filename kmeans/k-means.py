@@ -11,6 +11,9 @@ from sklearn.preprocessing import OrdinalEncoder
 from sklearn import metrics
 from matplotlib.legend import Legend
 from sklearn.cluster import KMeans
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
+
 
 # citation Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow (3rd edition)
 def shuffle_and_split_data(data, test_ratio):
@@ -171,7 +174,6 @@ if __name__ == '__main__':
     plot_k = [3, 4, 5]
     plot_train_score = []
     plot_test_score = []
-    distances = []
     for k in range(3, 6):
         kmeans = KMeans(n_clusters=k, random_state=13, n_init=20)
         kmeans.fit(data_train)
@@ -179,9 +181,8 @@ if __name__ == '__main__':
         score_test = metrics.accuracy_score(labels_test, kmeans.predict(data_test))
         plot_train_score.append(score_train)
         plot_test_score.append(score_test)
-        distances.append(kmeans.inertia_)
-        # print(score_train)
-        # print(score_test)
+
+
     plt.plot(plot_k, plot_train_score, color='orange', marker='o', label='Train')
     plt.plot(plot_k, plot_test_score, color='blue', marker='o', label='Test')
     plt.title('K-Value vs Accuracy')

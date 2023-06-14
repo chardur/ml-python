@@ -9,6 +9,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
 from matplotlib.legend import Legend
+from sklearn.model_selection import cross_val_score
+
 
 
 # citation Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow (3rd edition)
@@ -164,9 +166,13 @@ if __name__ == '__main__':
     # loop through k values 2-50 and find knn accuracy for each k
     knnScore = []
     knnValue = []
+    cvScore = []
     bestK = 0
     bestScore = 0
     best_tie = []
+    bestCV = 0
+    bestCVscore = 0
+    best_cv_tie = []
     for i in range(2, 51):
         knn_clf = KNeighborsClassifier(n_neighbors=i)
         knn_clf.fit(glass_data_train, glass_labels_train)
@@ -180,11 +186,27 @@ if __name__ == '__main__':
             best_tie = []  # this clears out old tie scores that were lower
         if score == bestScore:
             best_tie.append(i)
+
+        # run cross validation
+        knn_cv = KNeighborsClassifier(n_neighbors=i)
+        cv = cross_val_score(knn_cv, glass_data_train, glass_labels_train, cv=5)
+        cv_score = cv.mean()
+        cvScore.append(cv_score)
+        if cv_score > bestCVscore:
+            bestCV = i
+            bestCVscore = cv_score
+            best_cv_tie = []  # this clears out old tie scores that were lower
+        if cv_score == bestCVscore:
+            best_cv_tie.append(i)
+
     print('Best K value: ' + str(bestK) + ', Best score: ' + str(bestScore))
     print('Ties for best score: ' + str(best_tie))
+    print('Best K value for CV: ' + str(bestCV) + ', Best score: ' + str(bestCVscore))
+    print('Ties for best score CV: ' + str(best_cv_tie))
 
     # graph the results for best k from above
-    plt.plot(knnValue, knnScore, marker='o')
+    plt.plot(knnValue, knnScore, marker='o', color='blue', label='KNN')
+    plt.plot(knnValue, cvScore, marker='o', color='orange', label='C.V.')
     plt.title("KNN K-Value vs Score")
     plt.xlabel("K Value")
     plt.ylabel("Score")
@@ -193,7 +215,7 @@ if __name__ == '__main__':
     plt.ylim(ymin=0)
     plt.ylim(ymax=1.0)
     plt.grid()
-
+    plt.legend()
     # plot points for the ties for highest value
     for point in best_tie:
         plt.plot(point, knnScore[point-2], marker="o", markersize=10, markeredgecolor="red", markerfacecolor="none")
